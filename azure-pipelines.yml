@@ -1,0 +1,27 @@
+# Build NodeJS Express app using Azure Pipelines
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript?view=vsts
+trigger:
+- master
+  
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+
+- task: Npm@1
+  displayName: 'npm install'
+  inputs:
+    command: install
+
+- task: Npm@1
+  displayName: 'npm run build-prod'
+  inputs:
+    command: custom
+    customCommand: 'run build-prod'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist'
+    includeRootFolder: false
+
+- task: PublishBuildArtifacts@1
