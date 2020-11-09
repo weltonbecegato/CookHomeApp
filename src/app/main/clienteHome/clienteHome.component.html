@@ -1,23 +1,23 @@
-<div id="register" fxLayout="column">
+<div id="profile" class="page-layout simple tabbed">
 
-    <div id="register-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+    <!-- CONTENT -->
+    <div class="content">
+        <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
+        (click)="agendar()">
+        Agendar
+    </button>
 
-        <div id="register-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
+    <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN" style="margin-top: 8px;"
+        >
+        Meus pedidos
+    </button>
 
-            <div class="logo">
-                <img src="assets/images/logos/fuse.svg">
-            </div>
-
-            <div class="title">Menu</div>
-
-
-            <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
-                (click)="abrirBuscaCozinheiro()">
-                Buscar Cozinheiro
-            </button>
-
-        </div>
+    <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN" style="margin-top: 8px;"
+        >
+        Meu Cadastro
+    </button>
 
     </div>
-
+    <!-- / CONTENT -->
+    
 </div>

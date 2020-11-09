@@ -5,9 +5,11 @@ import { takeUntil } from 'rxjs/internal/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
-import { ClienteService } from '../services/cliente.service';
 import { Router } from '@angular/router';
-import { CozinheiroService } from '../services/cozinheiro.service';
+import { ClienteService } from 'app/main/services/cliente.service';
+import { CozinheiroService } from 'app/main/services/cozinheiro.service';
+import { EnderecoService } from '../services/endereco.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector     : 'cadastro',
@@ -16,10 +18,18 @@ import { CozinheiroService } from '../services/cozinheiro.service';
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations
 })
-export class RegisterComponent implements OnInit, OnDestroy
+export class CadastroComponent implements OnInit, OnDestroy
 {
-    registerForm: FormGroup;
+    basicoForm: FormGroup;
+    enderecoForm: FormGroup;
+    acessoForm: FormGroup;
+    tipoForm: FormGroup;
+    cozinheiroForm: FormGroup;
     cadastro: any;
+    passo: number;
+    passoTitulo: string;
+    erroTexto: string;
+    tipoCulinarias: any[];
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -29,7 +39,9 @@ export class RegisterComponent implements OnInit, OnDestroy
         private _formBuilder: FormBuilder,
         private _servicoCliente: ClienteService,
         private _servicoCozinheiro: CozinheiroService,
-        private _roteador: Router
+        private _enderecoService: EnderecoService,
+        private _roteador: Router,
+        private _snackBar: MatSnackBar
     )
     {
         // Configure the layout
@@ -52,7 +64,10 @@ export class RegisterComponent implements OnInit, OnDestroy
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
-        this.cadastro = { cidadeId: 3 };
+        this.cadastro = { culinarias: [] };
+        this.passo = 1;
+        this.tipoCulinarias = [];
+        this.mudarTitulo();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -64,24 +79,42 @@ export class RegisterComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        this.registerForm = this._formBuilder.group({
-            nome           : ['', Validators.required],
-            sobrenome      : ['', Validators.required],
-            email          : ['', [Validators.required, Validators.email]],
-            telefone       : ['', Validators.required],
-            senha          : ['', Validators.required],
+        this.tipoForm = this._formBuilder.group({
             tipo           : ['', Validators.required],
-            documento      : ['', Validators.required],
-
         });
 
-        // Update the validity of the 'passwordConfirm' field
-        // when the 'password' field changes
-        this.registerForm.get('password').valueChanges
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(() => {
-                this.registerForm.get('passwordConfirm').updateValueAndValidity();
-            });
+        this.basicoForm = this._formBuilder.group({
+            nome           : ['', Validators.required],
+            sobrenome      : ['', Validators.required],
+            telefone       : ['', Validators.required],
+            documento      : ['', Validators.required]
+        });
+
+        this.cozinheiroForm = this._formBuilder.group({
+            linkedin        : [''],
+            site           : [''],
+            culinarias     : ['']
+        });
+
+        this.enderecoForm = this._formBuilder.group({
+            endereco       : ['', Validators.required],
+            numero         : ['', Validators.required],
+            complemento    : [''],
+            bairro         : ['', Validators.required],
+            cidade         : ['', Validators.required],
+            estado         : ['', Validators.required],
+            cep            : ['', Validators.required],
+        });
+
+        this.acessoForm = this._formBuilder.group({
+            email          : ['', [Validators.required, Validators.email]],
+            senha          : ['', Validators.required],
+            termos         : ['', Validators.required],
+        });
+
+        this._servicoCozinheiro.obterTiposCulinaria().then(resposta => {
+            this.tipoCulinarias = resposta;
+        });
     }
 
     /**
@@ -95,22 +128,96 @@ export class RegisterComponent implements OnInit, OnDestroy
     }
 
     salvarCadastro(): void {
-        console.log(this.cadastro);
         if (this.cadastro.tipo === "1") {
             this._servicoCliente.salvarCliente(this.cadastro).then(res => {
-                alert('Conta cadastrada com sucesso.');
-                this._roteador.navigate(['/login']);
+                this.avancar();
             }).catch(erro => {
                 console.log(erro);
+                this.erroTexto = erro.error.email[0];
             });
         } else {
             this._servicoCozinheiro.salvarCozinheiro(this.cadastro).then(res => {
-                alert('Conta cadastrada com sucesso.');
-                this._roteador.navigate(['/login']);
+                this.avancar();
             }).catch(erro => {
                 console.log(erro);
+                this.erroTexto = erro.error.email[0];
             });
         }
+    }
+
+    avancar(): void {
+        console.log(this.cadastro);
+        if (this.passo === 3) {
+            if (this.cadastro.culinarias.length < 1) {
+                this.erroTexto = 'Selecione ao menos um tipo de culinaria'
+                return;
+            } else {
+                this.erroTexto = null;
+            }
+        }
+
+        if (this.cadastro.tipo === '1' && this.passo === 2) {
+            this.passo = this.passo + 2;    
+        }
+        else {
+            this.passo = this.passo + 1;
+        }
+        
+        this.mudarTitulo();
+    }
+
+    voltar(): void {
+        if (this.cadastro.tipo === '1' && this.passo === 4) {
+            this.passo = this.passo -2;    
+        }
+        else {
+            this.passo = this.passo - 1;
+        }
+        this.mudarTitulo();
+    }
+
+    mudarTitulo(): void {
+        switch (this.passo) {
+            case 1: 
+                this.passoTitulo = 'Selecione seu perfil';
+                break;
+            case 2:
+                this.passoTitulo = 'Informe seus dados pessoais';
+                break;
+            case 3:
+                this.passoTitulo = 'Informe seus dados de cozinheiro';
+                break;
+            case 4:
+                this.passoTitulo = 'Informe seus dados de endereço';
+                break;
+            case 5: 
+                this.passoTitulo = 'Informe seus dados de acesso';
+                break;
+            case 6: 
+                this.passoTitulo = 'Cadastro concluído!';
+                break;
+        }
+    }
+
+    verificarPasso(): boolean {
+        switch (this.passo) {
+            case 1: return !(this.cadastro.tipo === '1' || this.cadastro.tipo === '2');
+            case 2: return this.basicoForm.invalid;
+            case 3: return this.cozinheiroForm.invalid;
+            case 4: return this.enderecoForm.invalid;
+            case 5: return this.acessoForm.invalid;
+        }
+    }
+
+    consultarCep(): void {
+        this._enderecoService.consultarCep(this.cadastro.cep).then(resposta => {
+            if (resposta !== null) {
+                this.cadastro.endereco = resposta.endereco;
+                this.cadastro.bairro = resposta.bairro;
+                this.cadastro.cidade = resposta.cidade;
+                this.cadastro.estado = resposta.estado;
+            }
+        });
     }
 }
 

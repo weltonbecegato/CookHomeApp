@@ -1,7 +1,13 @@
 <!-- SIDE PANEL -->
 <ng-container *ngIf="!fuseConfig.layout.sidepanel.hidden && fuseConfig.layout.sidepanel.position === 'left'">
 
-    <!-- PANEL CONTENT -->
+    <!-- CHAT PANEL -->
+    <fuse-sidebar name="chatPanel" position="left" class="chat-panel left-chat-panel"
+                  [folded]="true" [foldedWidth]="70" [foldedAutoTriggerOnHover]="false"
+                  lockedOpen="gt-md">
+        <chat-panel></chat-panel>
+    </fuse-sidebar>
+    <!-- / CHAT PANEL -->
 
 </ng-container>
 <!-- / SIDE PANEL -->
@@ -66,7 +72,13 @@
 <!-- SIDE PANEL -->
 <ng-container *ngIf="!fuseConfig.layout.sidepanel.hidden && fuseConfig.layout.sidepanel.position === 'right'">
 
-    <!-- PANEL CONTENT -->
+    <!-- CHAT PANEL -->
+    <fuse-sidebar name="chatPanel" position="right" class="chat-panel right-chat-panel"
+                  [folded]="true" [foldedWidth]="70" [foldedAutoTriggerOnHover]="false"
+                  lockedOpen="gt-md">
+        <chat-panel></chat-panel>
+    </fuse-sidebar>
+    <!-- / CHAT PANEL -->
 
 </ng-container>
 <!-- / SIDE PANEL -->
@@ -82,6 +94,14 @@
     </toolbar>
 </ng-template>
 <!-- / TOOLBAR -->
+
+<!-- FOOTER -->
+<ng-template #footer>
+    <footer *ngIf="!fuseConfig.layout.footer.hidden"
+            [ngClass]="fuseConfig.layout.footer.customBackgroundColor === true ? fuseConfig.layout.footer.position + ' ' + fuseConfig.layout.footer.background : fuseConfig.layout.footer.position">
+    </footer>
+</ng-template>
+<!-- / FOOTER -->
 
 <!-- TOP NAVBAR -->
 <ng-template #topNavbar>

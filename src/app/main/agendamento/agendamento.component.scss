@@ -1,11 +1,27 @@
+agm-map {
+    width: 100%;
+    height: 300px;
+}
+
 @import "src/@fuse/scss/fuse";
 
-register {
+agendamento {
 
     #register {
         width: 100%;
         background: url('/assets/images/backgrounds/dark-material-bg.jpg') no-repeat;
         background-size: cover;
+
+        .erroValidacao {
+            color: #D73D32;
+            margin-bottom: 8px;
+            font-weight: bolder;
+            text-align: center;
+        }
+
+        .agm-info-window-content {
+            max-width: 250px;
+        }
 
         #register-form-wrapper {
             flex: 1 0 auto;
@@ -17,6 +33,7 @@ register {
 
             #register-form {
                 width: 384px;
+                height: 100%;
                 max-width: 384px;
                 padding: 32px;
                 text-align: center;
@@ -137,4 +154,6 @@ register {
             }
         }
     }
+
 }
+

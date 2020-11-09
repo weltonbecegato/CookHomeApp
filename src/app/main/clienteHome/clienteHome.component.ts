@@ -14,37 +14,13 @@ import { Router } from '@angular/router';
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations
 })
-export class ClienteHomeComponent implements OnInit, OnDestroy
+export class ClienteHomeComponent implements OnInit
 {
 
-    // Private
-    private _unsubscribeAll: Subject<any>;
-
     constructor(
-        private _fuseConfigService: FuseConfigService,
         private _roteador: Router
     )
     {
-        // Configure the layout
-        this._fuseConfigService.config = {
-            layout: {
-                navbar   : {
-                    hidden: true
-                },
-                toolbar  : {
-                    hidden: true
-                },
-                footer   : {
-                    hidden: true
-                },
-                sidepanel: {
-                    hidden: true
-                }
-            }
-        };
-
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -59,17 +35,7 @@ export class ClienteHomeComponent implements OnInit, OnDestroy
 
     }
 
-    abrirBuscaCozinheiro(){
-        this._roteador.navigate(['busca-cozinheiro']);
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
+    agendar(){
+        this._roteador.navigate(['agendamento']);
     }
 }

@@ -82,6 +82,7 @@ $typography: mat-typography-config(
 
 @import "src/app/main/login/login.theme";
 @import "src/app/main/cadastro/cadastro.theme";
+@import "src/app/main/agendamento/agendamento.theme";
 @import "src/app/main/shared/themes/list.theme";
 
 // Define a mixin for easier access
@@ -93,6 +94,8 @@ $typography: mat-typography-config(
     // Pages
     @include login-theme($theme);
     @include cadastro-theme($theme);
+    @include agendamento-theme($theme);
+    @include mail-confirm-theme($theme);
     @include list-theme($theme);
 }
 

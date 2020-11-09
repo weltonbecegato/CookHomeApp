@@ -7,40 +7,43 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { ClienteService } from '../services/cliente.service';
 import { Router } from '@angular/router';
+import { CozinheiroService } from '../services/cozinheiro.service';
+import { LoginService } from '../services/login.service';
 
 @Component({
-    selector     : 'agendamento',
-    templateUrl  : './agendamento.component.html',
-    styleUrls    : ['./agendamento.component.scss'],
+    selector: 'agendamento',
+    templateUrl: './agendamento.component.html',
+    styleUrls: ['./agendamento.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class AgendamentoComponent implements OnInit, OnDestroy
-{
-    registerForm: FormGroup;
-    cliente: any;
-
-    // Private
-    private _unsubscribeAll: Subject<any>;
+export class AgendamentoComponent implements OnInit, OnDestroy {
+    lat: number = -23.6485165;
+    lng: number = -46.722005;
+    agendamentoForm: FormGroup;
+    pesquisa: any;
+    resultado: any[];
+    tipoCulinarias: any[];
+    usuarioLogado: any;
+    itemSelecionado: any;
 
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
-        private _servico: ClienteService,
+        private _cozinheiroService: CozinheiroService,
         private _roteador: Router
-    )
-    {
+    ) {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
-                navbar   : {
+                navbar: {
                     hidden: true
                 },
-                toolbar  : {
+                toolbar: {
                     hidden: true
                 },
-                footer   : {
-                    hidden: true
+                footer: {
+                    hidden: false
                 },
                 sidepanel: {
                     hidden: true
@@ -48,9 +51,10 @@ export class AgendamentoComponent implements OnInit, OnDestroy
             }
         };
 
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
-        this.cliente = { cidadeId: 3 };
+        this.tipoCulinarias = [];
+        this.usuarioLogado = LoginService.getUser();
+        this.resultado = [];
+        this.pesquisa = { idCliente: this.usuarioLogado.id };
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -60,75 +64,39 @@ export class AgendamentoComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
-        this.registerForm = this._formBuilder.group({
-            nome           : ['', Validators.required],
-            sobrenome      : ['', Validators.required],
-            email          : ['', [Validators.required, Validators.email]],
-            telefone      : ['', Validators.required],
-            senha       : ['', Validators.required],
+    ngOnInit(): void {
+        this.agendamentoForm = this._formBuilder.group({
+            nome: [''],
+            tipoCulinarias: [''],
+            distancia: ['']
         });
 
-        // Update the validity of the 'passwordConfirm' field
-        // when the 'password' field changes
-        this.registerForm.get('password').valueChanges
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(() => {
-                this.registerForm.get('passwordConfirm').updateValueAndValidity();
-            });
+        this._cozinheiroService.obterTiposCulinaria().then(resposta => {
+            this.tipoCulinarias = resposta;
+        });
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
+    ngOnDestroy(): void {
     }
 
-    salvarCliente(): void {
-        this._servico.salvarCliente(this.cliente).then(res => {
-            alert('Conta cadastrada com sucesso.');
-            this._roteador.navigate(['/login']);
-        }).catch(erro => {
-            console.log(erro);
-        })
+    buscarCozinheiros(): void {
+        this._cozinheiroService.buscarCozinheiros(this.pesquisa).then(resposta => {
+            this.resultado = resposta;
+        }).catch(err => console.log(err));
+    }
+
+    voltar(): void {
+        this.resultado = [];
+    }
+
+    clickedMarker(item: any) {
+        this.itemSelecionado = item;
+    }
+
+    agendar(): void {
+
     }
 }
-
-/**
- * Confirm password validator
- *
- * @param {AbstractControl} control
- * @returns {ValidationErrors | null}
- */
-export const confirmPasswordValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-
-    if ( !control.parent || !control )
-    {
-        return null;
-    }
-
-    const password = control.parent.get('password');
-    const passwordConfirm = control.parent.get('passwordConfirm');
-
-    if ( !password || !passwordConfirm )
-    {
-        return null;
-    }
-
-    if ( passwordConfirm.value === '' )
-    {
-        return null;
-    }
-
-    if ( password.value === passwordConfirm.value )
-    {
-        return null;
-    }
-
-    return {passwordsNotMatching: true};
-};

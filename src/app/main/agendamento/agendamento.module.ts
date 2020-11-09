@@ -9,6 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { AgendamentoComponent } from './agendamento.component';
 import { ClienteService } from '../services/cliente.service';
+import { AgmCoreModule } from '@agm/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { MatSelectModule } from '@angular/material/select';
 
 const routes = [
     {
@@ -22,13 +25,19 @@ const routes = [
         AgendamentoComponent
     ],
     imports     : [
+        BrowserModule,
         RouterModule.forChild(routes),
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyAkMG_ppV2oEGDalZbJikfJIjozX1oiiZE',
+            language: 'pt'
+        }),
 
         MatButtonModule,
         MatCheckboxModule,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
+        MatSelectModule,
 
         FuseSharedModule
     ],

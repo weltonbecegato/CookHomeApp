@@ -78,7 +78,6 @@ export class LoginService implements CanActivate {
 
   static getUser(): any {
     var token = this.getToken();
-    if (token)
-      return token.user;
+    return token;
   }
 }

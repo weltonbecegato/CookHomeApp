@@ -17,6 +17,7 @@ import { fuseConfig } from 'app/fuse-config';
 
 import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';
+import { FooterModule } from 'app/layout/components/footer/footer.module';
 import { LoginModule } from './main/login/login.module';
 import { LoginService } from './main/services/login.service';
 import { CadastroModule } from './main/cadastro/cadastro.module';
@@ -61,6 +62,7 @@ const appRoutes: Routes = [
 
         // App modules
         LayoutModule,
+        FooterModule,
         LoginModule,
         CadastroModule,
         AgendamentoModule,
