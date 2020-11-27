@@ -80,7 +80,7 @@ export class CadastroComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this.tipoForm = this._formBuilder.group({
-            tipo           : ['', Validators.required],
+            tipo           : [''],
         });
 
         this.basicoForm = this._formBuilder.group({
@@ -128,7 +128,8 @@ export class CadastroComponent implements OnInit, OnDestroy
     }
 
     salvarCadastro(): void {
-        if (this.cadastro.tipo === "1") {
+        console.log(this.cadastro);
+        if (this.cadastro.tipo === 1) {
             this._servicoCliente.salvarCliente(this.cadastro).then(res => {
                 this.avancar();
             }).catch(erro => {
@@ -156,7 +157,7 @@ export class CadastroComponent implements OnInit, OnDestroy
             }
         }
 
-        if (this.cadastro.tipo === '1' && this.passo === 2) {
+        if (this.cadastro.tipo === 1 && this.passo === 2) {
             this.passo = this.passo + 2;    
         }
         else {
@@ -167,7 +168,7 @@ export class CadastroComponent implements OnInit, OnDestroy
     }
 
     voltar(): void {
-        if (this.cadastro.tipo === '1' && this.passo === 4) {
+        if (this.cadastro.tipo === 1 && this.passo === 4) {
             this.passo = this.passo -2;    
         }
         else {
@@ -201,7 +202,7 @@ export class CadastroComponent implements OnInit, OnDestroy
 
     verificarPasso(): boolean {
         switch (this.passo) {
-            case 1: return !(this.cadastro.tipo === '1' || this.cadastro.tipo === '2');
+            case 1: return !(this.cadastro.tipo === 1 || this.cadastro.tipo === 2);
             case 2: return this.basicoForm.invalid;
             case 3: return this.cozinheiroForm.invalid;
             case 4: return this.enderecoForm.invalid;

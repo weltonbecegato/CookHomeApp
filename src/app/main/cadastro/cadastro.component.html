@@ -14,9 +14,8 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Eu Sou um</mat-label>
                     <mat-select matInput formControlName="tipo" [(ngModel)]="cadastro.tipo">
-                        <mat-option value="0">Selecione</mat-option>
-                        <mat-option value="1">Cliente</mat-option>
-                        <mat-option value="2">Cozinheiro</mat-option>
+                        <mat-option [value]="1">Cliente</mat-option>
+                        <mat-option [value]="2">Cozinheiro</mat-option>
                     </mat-select>
                     <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
                     <mat-error>
