@@ -23,7 +23,7 @@ import { LoginService } from './main/services/login.service';
 import { CadastroModule } from './main/cadastro/cadastro.module';
 import { AgendamentoModule } from './main/agendamento/agendamento.module';
 import { LoginComponent } from './main/login/login.component';
-import { ClienteHomeModule } from './main/clienteHome/clienteHome.module';
+import { homeModule } from './main/home/home.module';
 
 const appRoutes: Routes = [
     {
@@ -66,7 +66,7 @@ const appRoutes: Routes = [
         LoginModule,
         CadastroModule,
         AgendamentoModule,
-        ClienteHomeModule,
+        homeModule,
     ],
     bootstrap   : [
         AppComponent

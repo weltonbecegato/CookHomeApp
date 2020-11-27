@@ -49,7 +49,7 @@ export class LoginService implements CanActivate {
     localStorage.removeItem('AUTH_TOKEN');
     localStorage.setItem('AUTH_TOKEN', JSON.stringify(data));
     if (data.tipo === 1) {
-      this._router.navigate([`/clienteHome/`]);
+      this._router.navigate([`/home/`]);
     } else if (data.tipo === 2) {
       this._router.navigate([`/cozinheiro/`]);
     }

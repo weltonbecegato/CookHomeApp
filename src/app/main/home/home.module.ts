@@ -7,21 +7,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 import { FuseSharedModule } from '@fuse/shared.module';
-import { ClienteHomeComponent } from './clienteHome.component';
+import { homeComponent } from './home.component';
 import { ClienteService } from '../services/cliente.service';
 import { MatSelectModule } from '@angular/material/select';
 import { CozinheiroService } from '../services/cozinheiro.service';
 
 const routes = [
     {
-        path     : 'clienteHome',
-        component: ClienteHomeComponent
+        path     : 'home',
+        component: homeComponent
     }
 ];
 
 @NgModule({
     declarations: [
-        ClienteHomeComponent
+        homeComponent
     ],
     imports     : [
         RouterModule.forChild(routes),
@@ -36,6 +36,6 @@ const routes = [
         FuseSharedModule
     ]
 })
-export class ClienteHomeModule
+export class homeModule
 {
 }

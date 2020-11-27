@@ -8,13 +8,13 @@ import { fuseAnimations } from '@fuse/animations';
 import { Router } from '@angular/router';
 
 @Component({
-    selector     : 'clienteHome',
-    templateUrl  : './clienteHome.component.html',
-    styleUrls    : ['./clienteHome.component.scss'],
+    selector     : 'home',
+    templateUrl  : './home.component.html',
+    styleUrls    : ['./home.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations
 })
-export class ClienteHomeComponent implements OnInit
+export class homeComponent implements OnInit
 {
 
     constructor(
