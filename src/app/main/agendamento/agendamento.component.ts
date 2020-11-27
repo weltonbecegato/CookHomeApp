@@ -33,24 +33,6 @@ export class AgendamentoComponent implements OnInit, OnDestroy {
         private _cozinheiroService: CozinheiroService,
         private _roteador: Router
     ) {
-        // Configure the layout
-        this._fuseConfigService.config = {
-            layout: {
-                navbar: {
-                    hidden: true
-                },
-                toolbar: {
-                    hidden: true
-                },
-                footer: {
-                    hidden: false
-                },
-                sidepanel: {
-                    hidden: true
-                }
-            }
-        };
-
         this.tipoCulinarias = [];
         this.usuarioLogado = LoginService.getUser();
         this.resultado = [];
